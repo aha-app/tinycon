@@ -119,15 +119,20 @@
       // clear canvas
       context.clearRect(0, 0, size, size);
 
-      // draw the favicon
-      context.drawImage(
-        faviconImage,
-        0, 4,
-        faviconImage.width - 4, faviconImage.height - 4,
-      );
-
-      // draw bubble over the top
-      if ((label + '').length > 0) drawBubble(context, color);
+      if ((label + '').length > 0) {
+        context.drawImage(
+          faviconImage,
+          0, 4,
+          faviconImage.width - 4, faviconImage.height - 4,
+        );
+        drawBubble(context, color);
+      } else {
+        context.drawImage(
+          faviconImage,
+          0, 0,
+          faviconImage.width, faviconImage.height,
+        );
+      }
 
       // refresh tag in page
       refreshFavicon();
