@@ -123,14 +123,14 @@
         context.drawImage(
           faviconImage,
           0, 4,
-          faviconImage.width - 4, faviconImage.height - 4,
+          faviconImage.width - 4, faviconImage.height - 4
         );
         drawBubble(context, color);
       } else {
         context.drawImage(
           faviconImage,
           0, 0,
-          faviconImage.width, faviconImage.height,
+          faviconImage.width, faviconImage.height
         );
       }
 
@@ -252,3 +252,4 @@
   }
 
 })();
+
