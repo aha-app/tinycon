@@ -17,10 +17,7 @@
   var r = Math.ceil(window.devicePixelRatio) || 1;
   var size = 16 * r;
   var defaults = {
-    width: 7,
-    height: 9,
-    font: 10 * r + 'px arial',
-    color: '#ffffff',
+    radius: 4,
     background: '#F03D25',
     fallback: true,
     crossOrigin: true,
@@ -110,11 +107,7 @@
   };
 
   var drawFavicon = function(label, color) {
-
-    // fallback to updating the browser title if unsupported
-    if (!getCanvas().getContext || browser.ie || browser.safari || options.fallback === 'force') {
-      return updateTitle(label);
-    }
+    updateTitle(label);
 
     var context = getCanvas().getContext("2d");
     var color = color || '#000000';
@@ -127,10 +120,14 @@
       context.clearRect(0, 0, size, size);
 
       // draw the favicon
-      context.drawImage(faviconImage, 0, 0, faviconImage.width, faviconImage.height, 0, 0, size, size);
+      context.drawImage(
+        faviconImage,
+        0, 4,
+        faviconImage.width - 4, faviconImage.height - 4,
+      );
 
       // draw bubble over the top
-      if ((label + '').length > 0) drawBubble(context, label, color);
+      if ((label + '').length > 0) drawBubble(context, color);
 
       // refresh tag in page
       refreshFavicon();
@@ -164,58 +161,18 @@
     }
   };
 
-  var drawBubble = function(context, label, color) {
+  var drawBubble = function(context, color) {
+    var radius = options.radius * r;
 
-    // automatic abbreviation for long (>2 digits) numbers
-    if (typeof label == 'number' && label > 99 && options.abbreviate) {
-      label = abbreviateNumber(label);
-    }
+    var top = radius + 1;
+    var left = size - radius - 1;
 
-    // bubble needs to be larger for double digits
-    var len = (label + '').length-1;
-
-    var width = options.width * r + (6 * r * len),
-      height = options.height * r;
-
-    var top = size - height,
-            left = size - width - r,
-            bottom = 16 * r,
-            right = 16 * r,
-            radius = 2 * r;
-
-    // webkit seems to render fonts lighter than firefox
-    context.font = (browser.webkit ? 'bold ' : '') + options.font;
     context.fillStyle = options.background;
-    context.strokeStyle = options.background;
+    context.strokeStyle = '#fff';
     context.lineWidth = r;
-
-    // bubble
-    context.beginPath();
-    context.moveTo(left + radius, top);
-    context.quadraticCurveTo(left, top, left, top + radius);
-    context.lineTo(left, bottom - radius);
-    context.quadraticCurveTo(left, bottom, left + radius, bottom);
-    context.lineTo(right - radius, bottom);
-    context.quadraticCurveTo(right, bottom, right, bottom - radius);
-    context.lineTo(right, top + radius);
-    context.quadraticCurveTo(right, top, right - radius, top);
-    context.closePath();
-    context.fill();
-
-    // bottom shadow
-    context.beginPath();
-    context.strokeStyle = "rgba(0,0,0,0.3)";
-    context.moveTo(left + radius / 2.0, bottom);
-    context.lineTo(right - radius / 2.0, bottom);
+    context.arc(left, top, radius, 0, Math.PI * 2, true);
     context.stroke();
-
-    // label
-    context.fillStyle = options.color;
-    context.textAlign = "right";
-    context.textBaseline = "top";
-
-    // unfortunately webkit/mozilla are a pixel different in text positioning
-    context.fillText(label, r === 2 ? 29 : 15, browser.mozilla ? 7*r : 6*r);
+    context.fill();
   };
 
   var refreshFavicon = function(){
