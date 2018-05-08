@@ -15,7 +15,7 @@
   var options = {};
   // Chrome browsers with nonstandard zoom report fractional devicePixelRatio.
   var r = Math.ceil(window.devicePixelRatio) || 1;
-  var size = 16 * r;
+  var size = 32 * r;
   var defaults = {
     radius: 4,
     background: '#F03D25',
@@ -115,22 +115,21 @@
 
     faviconImage = document.createElement('img');
     faviconImage.onload = function() {
-
       // clear canvas
       context.clearRect(0, 0, size, size);
 
       if ((label + '').length > 0) {
         context.drawImage(
           faviconImage,
-          0, 4,
-          faviconImage.width - 4, faviconImage.height - 4
+          0, 4 * r,
+          size - 4 * r, size - 4 * r
         );
         drawBubble(context, color);
       } else {
         context.drawImage(
           faviconImage,
           0, 0,
-          faviconImage.width, faviconImage.height
+          faviconImage.width / 2 * r, faviconImage.height / 2 * r
         );
       }
 
@@ -148,33 +147,30 @@
   };
 
   var updateTitle = function(label) {
+    // Grab the current title that we can prefix with the label
+    var originalTitle = document.title;
 
-    if (options.fallback) {
-      // Grab the current title that we can prefix with the label
-      var originalTitle = document.title;
+    // Strip out the old label if there is one
+    if (originalTitle[0] === '(') {
+      originalTitle = originalTitle.slice(originalTitle.indexOf(' '));
+    }
 
-      // Strip out the old label if there is one
-      if (originalTitle[0] === '(') {
-        originalTitle = originalTitle.slice(originalTitle.indexOf(' '));
-      }
-
-      if ((label + '').length > 0) {
-        document.title = '(' + label + ') ' + originalTitle;
-      } else {
-        document.title = originalTitle;
-      }
+    if ((label + '').length > 0) {
+      document.title = '(' + label + ') ' + originalTitle;
+    } else {
+      document.title = originalTitle;
     }
   };
 
   var drawBubble = function(context, color) {
-    var radius = options.radius * r;
+    var radius = options.radius * r * 2;
 
-    var top = radius + 1;
-    var left = size - radius - 1;
+    var top = radius + 1 * r;
+    var left = size - radius - 1 * r;
 
     context.fillStyle = options.background;
     context.strokeStyle = '#fff';
-    context.lineWidth = r;
+    context.lineWidth = r * 2;
     context.arc(left, top, radius, 0, Math.PI * 2, true);
     context.stroke();
     context.fill();
@@ -250,6 +246,4 @@
   } else {
     window.Tinycon = Tinycon;
   }
-
 })();
-
