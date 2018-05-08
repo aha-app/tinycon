@@ -1,6 +1,6 @@
 {
   "name": "@aha-app/tinycon",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Add notification bubbles in the favicon",
   "author": "Tom Moor <tom.moor@gmail.com> (http://tommoor.com)",
   "license": "MIT",
