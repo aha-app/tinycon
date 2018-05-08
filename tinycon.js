@@ -129,7 +129,7 @@
         context.drawImage(
           faviconImage,
           0, 0,
-          faviconImage.width / 2 * r, faviconImage.height / 2 * r
+          size, size
         );
       }
 
