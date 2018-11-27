@@ -147,18 +147,20 @@
   };
 
   var updateTitle = function(label) {
-    // Grab the current title that we can prefix with the label
-    var originalTitle = document.title;
+    if (options.fallback) {
+      // Grab the current title that we can prefix with the label
+      var originalTitle = document.title;
 
-    // Strip out the old label if there is one
-    if (originalTitle[0] === '(') {
-      originalTitle = originalTitle.slice(originalTitle.indexOf(' '));
-    }
+      // Strip out the old label if there is one
+      if (originalTitle[0] === '(') {
+        originalTitle = originalTitle.slice(originalTitle.indexOf(' '));
+      }
 
-    if ((label + '').length > 0) {
-      document.title = '(' + label + ') ' + originalTitle;
-    } else {
-      document.title = originalTitle;
+      if ((label + '').length > 0) {
+        document.title = '(' + label + ') ' + originalTitle;
+      } else {
+        document.title = originalTitle;
+      }
     }
   };
 
